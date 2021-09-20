@@ -1,0 +1,1 @@
+./target/release/shaped-image --input-path example/owl.jpg --output-path example/owl-shaped.jpg --specimens 200 --until 10000 --convergence 500

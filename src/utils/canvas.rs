@@ -2,7 +2,6 @@ use crate::utils::error::Error;
 use image::io::Reader as ImageReader;
 use image::{ImageBuffer, Rgb};
 use imageproc::drawing;
-use rayon::prelude::*;
 
 /// Compute the distance between two pixels
 ///
@@ -49,10 +48,13 @@ impl Canvas {
         let other_pixels = other.image.pixels();
         let both_pixels = self_pixels.zip(other_pixels);
 
-        let score: f32 = both_pixels
-            .par_bridge()
+        let score: Option<f32> = both_pixels
             .map(|(left_pixel, right_pixel)| pixel_distance(left_pixel, right_pixel))
-            .reduce(|| 0.0, |a, b| a + b);
+            .reduce(|a, b| a + b);
+        let score = match score {
+            Some(score) => score,
+            None => 1.0,
+        };
 
         (score / self.count_pixels() as f32) * 100.0
     }

@@ -133,13 +133,14 @@ impl Population {
             if self.termination_counter >= self.opts.convergence {
                 break;
             }
-            let best_specimen = self.specimens.get(0).unwrap();
-
-            best_specimen
-                .render(&self.reference)
-                .image
-                .save(&self.opts.output_path)
-                .expect("Can't save the image result");
         }
+
+        let best_specimen = self.specimens.get(0).unwrap();
+
+        best_specimen
+            .render(&self.reference)
+            .image
+            .save(&self.opts.output_path)
+            .expect("Can't save the image result");
     }
 }

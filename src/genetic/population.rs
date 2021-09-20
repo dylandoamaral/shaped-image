@@ -7,7 +7,6 @@ use crate::utils::time::duration_to_human;
 use chrono;
 use rand::{self, Rng};
 use rayon::prelude::*;
-use std::cmp::Ordering::Equal;
 
 pub struct Population {
     pub generation: u32,
@@ -15,8 +14,8 @@ pub struct Population {
     pub specimens: Vec<Specimen>,
     total_score: u32,
     opts: Opts,
-    start_time: chrono::DateTime<chrono::Utc>,
     termination_counter: i32,
+    start_time: chrono::DateTime<chrono::Utc>,
     report: io::Report,
 }
 
@@ -43,8 +42,8 @@ impl Population {
             specimens,
             total_score,
             opts,
-            start_time: chrono::Utc::now(),
             termination_counter: 0,
+            start_time: chrono::Utc::now(),
             report: io::Report::new(),
         })
     }
@@ -87,7 +86,8 @@ impl Population {
 
         self.report
             .insert(String::from("Generation"), generation_text);
-        self.report.insert(String::from("Start time"), time_text);
+        self.report
+            .insert(String::from("Process duration"), time_text);
         self.report
             .insert(String::from("Best similitude"), simitude_text);
         self.report.render();
@@ -133,14 +133,13 @@ impl Population {
             if self.termination_counter >= self.opts.convergence {
                 break;
             }
+            let best_specimen = self.specimens.get(0).unwrap();
+
+            best_specimen
+                .render(&self.reference)
+                .image
+                .save(&self.opts.output_path)
+                .expect("Can't save the image result");
         }
-
-        let best_specimen = self.specimens.get(0).unwrap();
-
-        best_specimen
-            .render(&self.reference)
-            .image
-            .save(&self.opts.output_path)
-            .expect("Can't save the image result");
     }
 }

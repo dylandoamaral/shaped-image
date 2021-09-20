@@ -26,7 +26,8 @@ fn retrieve_score_from_genes(reference: &Reference, genes: &Vec<Gene>) -> (u32, 
 
 impl Specimen {
     pub fn new(reference: &Reference) -> Specimen {
-        let genes: Vec<Gene> = (0..2000)
+        // TODO: Add this number to the configuration
+        let genes: Vec<Gene> = (0..1500)
             .into_par_iter()
             .map(|_| Gene::new(reference))
             .collect();
